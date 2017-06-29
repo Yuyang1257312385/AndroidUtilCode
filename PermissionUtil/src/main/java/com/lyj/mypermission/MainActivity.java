@@ -28,10 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //**************使用封装好的Util*****************//
-        /**
-         * 1. 将permission拷贝到项目中
-         * 2.主配置清单注册PermissionActivity
-         */
         PermissionUtil.requestPermission(this, new PermissionListener() {
             @Override
             public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
@@ -46,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }, Manifest.permission.CALL_PHONE);
 
+        //**************使用封装好的Util=====END*************//
+
     }
+    //============================使用抽取的方法==========================================
 
     /**
      *
@@ -97,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    //=========================================使用抽取的方法 END ================================
 
     private void call() {
         try {
