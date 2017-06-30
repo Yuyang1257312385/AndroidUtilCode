@@ -1,1 +1,1 @@
-include ':app', ':utilcode', ':PermissionUtil'
+include ':app', ':utilcode', ':PermissionUtil', ':ImageUtil'
