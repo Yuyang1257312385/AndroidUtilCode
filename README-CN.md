@@ -243,6 +243,7 @@ getImageType                    : 获取图片类型
 compressByScale                 : 按缩放压缩
 compressByQuality               : 按质量压缩
 compressBySampleSize            : 按采样大小压缩
+saveImageToGallery              : 保存照片到图库
  ```
 
 > - **意图相关→[IntentUtils.java][intent.java]**

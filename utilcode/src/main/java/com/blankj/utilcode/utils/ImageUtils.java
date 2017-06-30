@@ -2,6 +2,7 @@ package com.blankj.utilcode.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -22,7 +23,10 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -1487,5 +1491,47 @@ public class ImageUtils {
         byte[] bytes = baos.toByteArray();
         if (recycle && !src.isRecycled()) src.recycle();
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+    }
+
+    //*************************~~~~~~~~~~压缩结束~~~~~~~~~~~*************************
+
+    /**
+     * 保存图片到本地相册
+     *
+     * bug：删除不掉原先的
+     * */
+    public static void saveImageToGallery(Context context, Bitmap bmp, String fileName) {
+        // 首先保存图片
+        File appDir = new File(Environment.getExternalStorageDirectory(), "QH");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        //String fileName = System.currentTimeMillis() + ".jpg";
+        fileName=fileName+".jpg";
+        File file = new File(appDir, fileName);
+        if(file.exists()){
+            file.delete();
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    file.getAbsolutePath(), fileName, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 最后通知图库更新
+//        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getAbsoluteFile())));
     }
 }
